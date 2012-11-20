@@ -1,5 +1,4 @@
-#Script to Backup the contents of the Home/User Folder
-#Prompts for addition locations for backup
+#Gathers User Settings and Environment
 
 class GetEnvVariables
   attr_reader :user, :user_path
