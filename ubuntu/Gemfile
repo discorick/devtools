@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
 group :rubydev do
-  gem 'interactive_editor'
   gem 'rspec'
+  gem 'interactive_editor'
   gem 'rb-readline'
   gem 'awesome_print'
   gem 'thin'
