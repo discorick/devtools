@@ -1,2 +1,2 @@
-require 'gather_environment.rb'
+require '../components.rb'
 $ENV = GetEnvVariables.kick_off
