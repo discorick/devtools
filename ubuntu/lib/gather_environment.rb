@@ -1,4 +1,4 @@
-require '../components.rb'
+require_relative '../components.rb'
 #Gathers User Settings and Environment
 
 class GetEnvVariables

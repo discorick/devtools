@@ -1,4 +1,4 @@
-require '../components.rb'
+require_relative '../components.rb'
 #Script to Backup the contents of the Home/User Folder
 #Prompts for addition locations for backup
 
