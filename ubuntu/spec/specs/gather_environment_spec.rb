@@ -1,20 +1,19 @@
 require_relative "../spec_helper.rb"
 require_relative "../../lib/gather_environment.rb"
+require_relative "../../components.rb"
 #Specs for Environment Gathering Methods
 
 describe "Gathers Working Environment Variables" do
   context "When detecting current user info..." do
 
-    before (:each) do
-      $ENV = GetEnvVariables.kick_off
-    end
+    GetEnvVariables.kick_off
 
     it "\n -Detects Home/User" do
-      $ENV.user.should == ENV['USER']
+      configatron.user.should == ENV['USER']
     end
 
     it "\n -Builds a Path to the USER Folder" do
-      $ENV.user_path.should == "/home/#{$ENV.user}"
+      configatron.user_path.should == "/home/#{configatron.user}"
     end
   end
 end

@@ -2,6 +2,7 @@ source 'http://rubygems.org'
 
 group :rubydev do
   gem 'rspec'
+  gem 'configatron'
   gem 'interactive_editor'
   gem 'rb-readline'
   gem 'awesome_print'
