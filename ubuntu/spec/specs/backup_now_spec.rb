@@ -19,18 +19,25 @@ describe Backuperator do
       @sut = Backuperator.new_backup
     end
 
-    it "\n -Adds a Directory" do
+    it "\n -Adds a Directory to the Configurator" do
+      configatron.file_backup_list = {}
       @sut.add_directory(mock_directory)
       configatron.file_backup_list[mock_directory].length.should equal 0
     end
 
-    before (:each) do
-      @sut.add_directory(mock_directory) unless configatron.file_backup_list.include? mock_directory
+    it "\n -Raises a Notice when adding a duplicate directory" do
+      expect {@sut.add_directory(mock_directory)}.to raise_error
     end
 
-    it "\n -Generates a file list" do
+    before (:each) do
+      @sut.add_directory(mock_directory)   
+    end
+
+    it "\n -Generates a file list for each saved directory in the Configurator" do
       @sut.make_file_lists
       configatron.file_backup_list[mock_directory].should include "/home/#{configatron.user}/mockingdir/newfile1.txt"
     end
+
+
   end
 end

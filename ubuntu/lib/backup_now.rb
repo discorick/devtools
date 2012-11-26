@@ -12,6 +12,8 @@ class Backuperator
   end
 
   def add_directory(new_directory)
+    notice = "Notice: #{new_directory} has already been added!"
+    raise notice if configatron.file_backup_list.has_key? new_directory
     configatron.file_backup_list[new_directory] = []
   end
 
@@ -20,12 +22,5 @@ class Backuperator
       configatron.file_backup_list[key] = %x{find #{key} -type f -maxdepth 1}
     end
   end
-end
 
-
-
-
-def make_file_list(filepath)
-  Dir.chdir(filepath)
-  list_files = %x{find -type f -maxdepth 1}
 end
