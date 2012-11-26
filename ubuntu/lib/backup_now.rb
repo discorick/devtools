@@ -3,7 +3,9 @@ require_relative '../components.rb'
 #Prompts for addition locations for backup
 
 class Backuperator
+  attr_accessor :destination
   def initialize
+    @destination = ''
     configatron.file_backup_list = {}
   end
 
@@ -19,8 +21,12 @@ class Backuperator
 
   def make_file_lists
     configatron.file_backup_list.each_key do |key|
-      configatron.file_backup_list[key] = %x{find #{key} -type f -maxdepth 1}
+      configatron.file_backup_list[key] = %x{find #{key} -maxdepth 1 -type f}
     end
+  end
+
+  def make_destination_dir
+    %x{mkdir #{@destination}}
   end
 
 end

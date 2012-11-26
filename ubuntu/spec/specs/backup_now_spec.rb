@@ -33,11 +33,24 @@ describe Backuperator do
       @sut.add_directory(mock_directory)   
     end
 
-    it "\n -Generates a file list for each saved directory in the Configurator" do
+    it "\n -Generates a file list for each saved directory in the Configatron" do
       @sut.make_file_lists
       configatron.file_backup_list[mock_directory].should include "/home/#{configatron.user}/mockingdir/newfile1.txt"
     end
 
+   it "\n -Sets a Destination Dir" do
+     @sut.destination = mock_directory
+     @sut.destination.should include '~/mockingdir'
+   end
 
+   it "\n -Makes a Destination Dir" do
+     @sut.make_destination_dir
+   end
+
+   it "\n -Copies Files to Destination" do
+     @sut.copy_files(configatron.file_backup_list).to_location
+   end
+
+    ##Next would be good Idea to practice file creation mocks
   end
 end
