@@ -25,8 +25,5 @@ class Backuperator
     end
   end
 
-  def make_destination_dir
-    %x{mkdir #{@destination}}
-  end
 
 end
