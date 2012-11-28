@@ -6,6 +6,9 @@ require_relative "../../components.rb"
 def setup_tests
   %x{mkdir ~/mockingdir}
   %x{touch ~/mockingdir/newfile1.txt ~/mockingdir/newfile2.txt ~/mockingdir/newfile3.txt}
+  %x{mkdir ~/mockingdir/testdir1}
+  %x{mkdir ~/mockingdir/testdir2}
+  %x{mkdir ~/mockingdir/testdir3}
 end
 
 describe Backuperator do
@@ -36,7 +39,6 @@ describe Backuperator do
     it "\n -Generates a file list for each saved directory in the Configatron" do
       @sut.make_file_lists
       configatron.file_backup_list[mock_directory].should include "/home/#{configatron.user}/mockingdir/newfile1.txt"
-      puts configatron.file_backup_list[mock_directory]
     end
 
    it "\n -Sets a Destination Dir" do
@@ -44,8 +46,10 @@ describe Backuperator do
      @sut.destination.should include '~/mockingdir'
    end
 
-   it "\n -Adds Subfolders to the file backup list" do
-     @sut.add_all_subfolders(mock_directory)
+   it "\n -List all the folders in a directory" do
+     result = []
+     @sut.make_folder_list(mock_directory){|folder| result << folder}
+     result[1].should equal 'testdir2'
    end
 
     ##Next would be good Idea to practice file creation mocks
