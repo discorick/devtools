@@ -16,7 +16,7 @@ describe Backuperator do
     let(:mock_directory){'~/mockingdir'}
 
     setup_tests if File.exists?("~/mockingdir")
-    GetEnvVariables.kick_off
+    GetEnvVariables.kick_off #Populates Configuratron with env info
 
     before (:each) do
       @sut = Backuperator.new_backup
@@ -36,22 +36,24 @@ describe Backuperator do
       @sut.add_directory(mock_directory)   
     end
 
-    it "\n -Generates a file list for each saved directory in the Configatron" do
+    it "\n -Generates a file list array for each saved directory in the Configatron" do
+      puts @sut.make_file_lists
       @sut.make_file_lists
       configatron.file_backup_list[mock_directory].should include "/home/#{configatron.user}/mockingdir/newfile1.txt"
     end
 
-   it "\n -Sets a Destination Dir" do
-     @sut.destination = mock_directory
-     @sut.destination.should include '~/mockingdir'
-   end
+    before (:each) do
+      @sut.make_file_lists
+    end
 
-   it "\n -List all the folders in a directory" do
-     result = []
-     @sut.make_folder_list(mock_directory){|folder| result << folder}
-     result[1].should equal 'testdir2'
-   end
+    it "\n -Cuts the Config File Backup into a Config File Transfer List" do
+      @sut.make_file_lists_transferable
+      configatron.transfer_list['/mockingdir'].should_not include "/home/#{configatron.user}"
+    end
 
-    ##Next would be good Idea to practice file creation mocks
+   it "\n -Expands Configatron File Backup List to a Directory" do
+     @sut.expand_to("#{configatron.user_path}/backup")
+     `ls ~/mockingdir/backup/mockingdir`.should include 'newfile1.txt'
+   end
   end
 end
