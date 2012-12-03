@@ -1,6 +1,6 @@
 require_relative '../components.rb'
-#Script to Backup the contents of the Home/User Folder
-#Prompts for addition locations for backup
+#Methods to assist Backup Scripts
+#Run Backuperator.new_backup to refresh configatron.file_backup_list
 
 class Backuperator
   def initialize
@@ -11,24 +11,34 @@ class Backuperator
     Backuperator.new
   end
 
-  def add_directory(new_directory)
+  def add_directory(new_directory) #use ~/ NOT /home/user
     notice = "Notice: #{new_directory} has already been added!"
     raise notice if configatron.file_backup_list.has_key? new_directory
     configatron.file_backup_list[new_directory] = ""
   end
 
-  def make_file_lists
+  def build_file_lists #Populates Each Added Dir with the Files it Contains
     configatron.file_backup_list.each_key do |key|
       configatron.file_backup_list[key] = %x{find #{key} -maxdepth 1 -type f}
       configatron.file_backup_list[key] = configatron.file_backup_list[key].split("\n").to_a
     end
   end
 
-  def make_file_lists_transferable
-
+  def make_file_lists_expandable
+    configatron.file_backup_list.each_key do |directory|
+      configatron.file_backup_list[directory].each do |filename|
+        filename.slice! "/home/#{configatron.user}/#{directory[2..-1]}/"
+      end
+    end
   end
 
   def expand_to(backup_directory)
-
+    configatron.file_backup_list.each_key do |directory|
+      FileUtils.mkpath "#{backup_directory}/#{directory[2..-1]}/"
+      configatron.file_backup_list[directory].each do |file|
+        `cp #{directory}/#{file} #{backup_directory}/#{directory[2..-1]}`
+      end
+    end
   end
+
 end

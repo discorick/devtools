@@ -1,21 +1,19 @@
 require_relative "../spec_helper.rb"
 require_relative "../../lib/backup_now.rb"
 require_relative "../../components.rb"
-#Specs for Backing up Home/User Folder
+#Specs for Helper methods for backup scripts
 
 def setup_tests
   %x{mkdir ~/mockingdir}
   %x{touch ~/mockingdir/newfile1.txt ~/mockingdir/newfile2.txt ~/mockingdir/newfile3.txt}
-  %x{mkdir ~/mockingdir/testdir1}
-  %x{mkdir ~/mockingdir/testdir2}
-  %x{mkdir ~/mockingdir/testdir3}
+  %x{mkdir ~/mockingdir/testdir1 ~/mockingdir/testdir2 ~/mockingdir/testdir3 ~/mockingdir/backup}
 end
 
 describe Backuperator do
   context "\n When Running a Backup" do
-    let(:mock_directory){'~/mockingdir'}
+    let(:mock_directory){"~/mockingdir"}
 
-    setup_tests if File.exists?("~/mockingdir")
+    setup_tests unless File.exists?("~/mockingdir")
     GetEnvVariables.kick_off #Populates Configuratron with env info
 
     before (:each) do
@@ -37,23 +35,25 @@ describe Backuperator do
     end
 
     it "\n -Generates a file list array for each saved directory in the Configatron" do
-      puts @sut.make_file_lists
-      @sut.make_file_lists
+      @sut.build_file_lists
       configatron.file_backup_list[mock_directory].should include "/home/#{configatron.user}/mockingdir/newfile1.txt"
+      configatron.file_backup_list[mock_directory].should include "/home/#{configatron.user}/mockingdir/newfile2.txt"
     end
 
     before (:each) do
-      @sut.make_file_lists
+      @sut.build_file_lists
     end
 
     it "\n -Cuts the Config File Backup into a Config File Transfer List" do
-      @sut.make_file_lists_transferable
-      configatron.transfer_list['/mockingdir'].should_not include "/home/#{configatron.user}"
+      @sut.make_file_lists_expandable
+      configatron.file_backup_list['~/mockingdir'].should include "newfile1.txt"
+      configatron.file_backup_list['~/mockingdir'].should include "newfile2.txt"
     end
 
-   it "\n -Expands Configatron File Backup List to a Directory" do
-     @sut.expand_to("#{configatron.user_path}/backup")
-     `ls ~/mockingdir/backup/mockingdir`.should include 'newfile1.txt'
+   it "\n -Expands Configatron File Transfer List to a Directory" do
+     @sut.make_file_lists_expandable
+     @sut.expand_to("~/backup")
+     `ls ~/backup/mockingdir`.should include 'newfile1.txt'
    end
   end
 end
