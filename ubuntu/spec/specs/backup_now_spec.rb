@@ -1,5 +1,4 @@
 require_relative "../spec_helper.rb"
-require_relative "../../lib/backup_now.rb"
 require_relative "../../components.rb"
 #Specs for Helper methods for backup scripts
 
