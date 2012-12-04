@@ -1,11 +1,13 @@
 require_relative '../components.rb'
 #Todo ... Script to recursively add folders into an array 
 
+GetEnvVariables.kick_off
 backup = Backuperator.new_backup
 
 puts "Type in where the $backup_directory_list is located"
 location = gets.chomp
 require location
+puts $backup_directory_list
 
 $backup_directory_list.each{|saved_dir| backup.add_directory(saved_dir)}
 backup.build_file_lists

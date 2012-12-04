@@ -28,6 +28,7 @@ class Backuperator
     configatron.file_backup_list.each_key do |directory|
       configatron.file_backup_list[directory].each do |filename|
         filename.slice! "/home/#{configatron.user}/#{directory[2..-1]}/"
+        filename.slice! "/home/#{configatron.user}/"
       end
     end
   end
