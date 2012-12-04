@@ -34,7 +34,8 @@ class Backuperator
 
   def expand_to(backup_directory)
     configatron.file_backup_list.each_key do |directory|
-      FileUtils.mkpath "#{backup_directory}/#{directory[2..-1]}/"
+      new_dir = "#{backup_directory}/#{directory[2..-1]}"
+      `mkdir -p #{new_dir}` unless File.exists?(new_dir)
       configatron.file_backup_list[directory].each do |file|
         `cp #{directory}/#{file} #{backup_directory}/#{directory[2..-1]}`
       end
