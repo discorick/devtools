@@ -11,10 +11,8 @@ class Backuperator
     Backuperator.new
   end
 
-  def add_directory(new_directory) #use ~/ NOT /home/user
-    notice = "Notice: #{new_directory} has already been added!"
-    raise notice if configatron.file_backup_list.has_key? new_directory
-    configatron.file_backup_list[new_directory] = ""
+  def add_directory(new_directory) #use absolute paths
+    configatron.file_backup_list[new_directory] = "" unless configatron.file_backup_list.include?(new_directory)
   end
 
   def build_file_lists #Populates Each Added Dir with the Files it Contains
@@ -27,20 +25,26 @@ class Backuperator
   def make_file_lists_expandable
     configatron.file_backup_list.each_key do |directory|
       configatron.file_backup_list[directory].each do |filename|
-        filename.slice! "/home/#{configatron.user}/#{directory[2..-1]}/"
-        filename.slice! "/home/#{configatron.user}/"
+        filename.slice! "#{directory}/"
       end
     end
   end
 
-  def expand_to(backup_directory)
+  def expand_to(backup_directory) #Bug.. expands everything to same directory
     configatron.file_backup_list.each_key do |directory|
-      new_dir = "#{backup_directory}/#{directory[2..-1]}"
+      base_dir = File.basename(directory)
+      new_dir = "#{backup_directory}/#{base_dir}"
       `mkdir -p #{new_dir}` unless File.exists?(new_dir)
       configatron.file_backup_list[directory].each do |file|
-        `cp #{directory}/#{file} #{backup_directory}/#{directory[2..-1]}`
+        `cp #{directory}/#{file} #{backup_directory}/#{base_dir}`
       end
     end
+  end
+
+  def add_all_directories(from_this_directory)
+    directory_search = `find #{from_this_directory} -type d`
+    directory_list = directory_search.split("\n").to_a
+    directory_list.each{|directory| add_directory(directory)}
   end
 
 end

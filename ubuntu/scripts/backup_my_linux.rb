@@ -4,12 +4,13 @@ require_relative '../components.rb'
 GetEnvVariables.kick_off
 backup = Backuperator.new_backup
 
-puts "Type in where the $backup_directory_list is located"
-location = gets.chomp
-require location
+$backup_directory_list = ['/home/discorick/repositories']
 puts $backup_directory_list
+puts "Enter to continue"
+continue = gets
 
-$backup_directory_list.each{|saved_dir| backup.add_directory(saved_dir)}
+$backup_directory_list.each{|saved_dir| backup.add_all_directories(saved_dir)}
+puts configatron.file_backup_list
 backup.build_file_lists
 backup.make_file_lists_expandable
 
