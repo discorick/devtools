@@ -47,18 +47,18 @@ describe Backuperator do
 
    it "\n -Expands Configatron File Transfer List to a Directory" do
      @sut.make_file_lists_expandable
-     @sut.expand_to("/home/discorick/backup")
-     `ls ~/backup/mockingdir`.should include 'newfile1.txt'
+     @sut.expand_to("#{configatron.user_path}/backuperator_test")
+     `ls ~/backuperator_test/mockingdir`.should include 'newfile1.txt'
    end
 
    it "\n -Adds a File Tree to the File Backup List" do
-     @sut.add_all_directories("/home/discorick/mockingdir")
+     @sut.add_all_directories("#{configatron.user_path}/mockingdir")
     configatron.file_backup_list.should include '/home/discorick/mockingdir/testdir3'
    end
 
    after (:all) do
      `rm -r ~/mockingdir`
-     `rm -r ~/backup`
+     `rm -r ~/backuperator_test`
    end
   
   end
