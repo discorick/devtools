@@ -30,21 +30,22 @@ class Backuperator
     end
   end
 
-  def expand_to(backup_directory) #Bug.. expands everything to same directory
+  def add_all_directories(from_this_directory)
+    directory_search = `find #{from_this_directory} -type d`
+    directory_list = directory_search.split("\n").to_a
+    directory_list.each{|directory| add_directory(directory)}
+  end
+
+  def expand_to(backup_directory) 
     configatron.file_backup_list.each_key do |directory|
-      base_dir = File.basename(directory)
+      base_dir = directory.dup
+      base_dir.slice! configatron.user_path
       new_dir = "#{backup_directory}/#{base_dir}"
       `mkdir -p #{new_dir}` unless File.exists?(new_dir)
       configatron.file_backup_list[directory].each do |file|
         `cp #{directory}/#{file} #{backup_directory}/#{base_dir}`
       end
     end
-  end
-
-  def add_all_directories(from_this_directory)
-    directory_search = `find #{from_this_directory} -type d`
-    directory_list = directory_search.split("\n").to_a
-    directory_list.each{|directory| add_directory(directory)}
   end
 
 end

@@ -12,7 +12,7 @@ describe Backuperator do
   context "\n When Running a Backup" do
     let(:mock_directory){"/home/discorick/mockingdir"}
 
-    setup_tests unless File.exists?("/home/discorick/mockingdir")
+    setup_tests 
     GetEnvVariables.kick_off #Populates Configuratron with env info
 
     before (:each) do
@@ -54,6 +54,11 @@ describe Backuperator do
    it "\n -Adds a File Tree to the File Backup List" do
      @sut.add_all_directories("/home/discorick/mockingdir")
     configatron.file_backup_list.should include '/home/discorick/mockingdir/testdir3'
+   end
+
+   after (:all) do
+     `rm -r ~/mockingdir`
+     `rm -r ~/backup`
    end
   
   end

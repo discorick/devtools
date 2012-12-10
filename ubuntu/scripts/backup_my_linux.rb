@@ -1,5 +1,4 @@
 require_relative '../components.rb'
-#Todo ... Script to recursively add folders into an array 
 
 GetEnvVariables.kick_off
 backup = Backuperator.new_backup
