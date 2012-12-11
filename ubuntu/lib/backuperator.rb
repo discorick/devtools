@@ -43,7 +43,7 @@ class Backuperator
       new_dir = "#{backup_directory}/#{base_dir}"
       `mkdir -p #{new_dir}` unless File.exists?(new_dir)
       configatron.file_backup_list[directory].each do |file|
-        `cp #{directory}/#{file} #{backup_directory}/#{base_dir}`
+        `sudo cp #{directory}/#{file} #{backup_directory}/#{base_dir}`
       end
     end
   end
