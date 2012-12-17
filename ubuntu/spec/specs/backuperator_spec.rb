@@ -53,12 +53,12 @@ describe Backuperator do
 
    it "\n -Adds a File Tree to the File Backup List" do
      @sut.add_all_directories("#{configatron.user_path}/mockingdir")
-    configatron.file_backup_list.should include '/home/discorick/mockingdir/testdir3'
+    configatron.file_backup_list.should include "#{configatron.user_path}/mockingdir/testdir3"
    end
 
    after (:all) do
      `rm -r ~/mockingdir`
-     `rm -r ~/backuperator_test`
+     `rm -r ~/backuperator_test` if File.exists?("#{configatron.user_path}/backuperator_test")
    end
   
   end
