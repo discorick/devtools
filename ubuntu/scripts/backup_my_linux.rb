@@ -11,8 +11,8 @@ $backup_directory_list.each{|saved_dir| backup.add_all_directories(saved_dir)}
 
 backup.build_file_lists
 backup.make_file_lists_expandable
-
-Strip.matching_elements_from_hash(configatron.file_backup_list,:each_value,[".x"])
+Strip.matching_elements_from_hash(configatron.file_backup_list,:each_key,$ignore_directories)
+Strip.matching_elements_from_hash(configatron.file_backup_list,:each_value,$ignore_files)
 
 puts "Backup to .... ?"
 destination = gets.chomp
