@@ -5,9 +5,11 @@ describe Strip do
   context "\n - When Stripping an array of elements containing X number of matching elements" do
 
     it "Removes the items matching the ignore list from a Hash" do
+      ignore_key = [/delete/]
       ignore_list = [/git/,/\.thisfile/,/\.alsothisfile/]
-      array_to_strip_from_hash = {"hash" => ["git",".thisfile",".alsothisfile", ".notthisfile", "orthisone"]}
+      array_to_strip_from_hash = {"hash" => ["this/git","harr/.thisfile",".alsothisfile", ".notthisfile", "orthisone"],"deletethis" => ["somefile"]}
       Strip.matching_elements_from_hash(array_to_strip_from_hash,:each_value, ignore_list)
+      Strip.matching_elements_from_hash(array_to_strip_from_hash,:each_key, ignore_key)
       array_to_strip_from_hash.should == {"hash" => [".notthisfile", "orthisone"]}
     end
 
