@@ -18,14 +18,20 @@ class TimeThis
   end
 end
 
+begin
+  require_relative 'resources/backup_list.rb'
+rescue LoadError
+  puts"\n'resources/backup_list.rb' Not Found! Try recloning the repo."
+  enter_to_continue
+end
+
 GetEnvVariables.kick_off
 backup = Backuperator.new_backup
-eval File.read('resources/backup_list.rb')
-puts "If you have not yet added the custom folders to backup or populated the ignore lists \nplease type 'exit' to do this now otherwise press any key: \n \n"
+puts "File Backup Script"
 enter_to_continue
 system("clear")
 
-puts "Backup Files in Home Folder? (y/n) \n \n"
+puts "Backup Files in Home Folder? (y/n) \n"
 confirm = gets.chomp
 if confirm == 'y'
   puts "\n1 Recursive \n2 Non-Recursive \n"
