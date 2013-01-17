@@ -4,6 +4,7 @@ require_relative "../../components.rb"
 
 def setup_tests
   %x{mkdir ~/mockingdir}
+  FileUtils.touch '/home/discorick/mockingdir/new file4.txt'
   %x{touch ~/mockingdir/newfile1.txt ~/mockingdir/newfile2.txt ~/mockingdir/newfile3.txt}
   %x{mkdir ~/mockingdir/testdir1 ~/mockingdir/testdir2 ~/mockingdir/testdir3}
 end
@@ -31,29 +32,25 @@ describe Backuperator do
 
     it "\n -Generates a file list array for each saved directory in the Configatron" do
       @sut.build_file_lists
-      configatron.file_backup_list[mock_directory].should include "/home/#{configatron.user}/mockingdir/newfile1.txt"
-      configatron.file_backup_list[mock_directory].should include "/home/#{configatron.user}/mockingdir/newfile2.txt"
+      configatron.file_backup_list[mock_directory].should include "newfile1.txt"
+      configatron.file_backup_list[mock_directory].should include "new file4.txt"
+      configatron.file_backup_list[mock_directory].should include "newfile2.txt"
     end
 
     before (:each) do
       @sut.build_file_lists
     end
 
-    it "\n -Makes File List Expandable" do
-      @sut.make_file_lists_expandable
-      configatron.file_backup_list[mock_directory].should include "newfile1.txt"
-      configatron.file_backup_list[mock_directory].should include "newfile2.txt"
-    end
-
-   it "\n -Expands Configatron File Transfer List to a Directory" do
-     @sut.make_file_lists_expandable
-    # @sut.expand_to("#{configatron.user_path}/backuperator_test")
-    # `ls ~/backuperator_test/mockingdir`.should include 'newfile1.txt'
-   end
-
    it "\n -Adds a File Tree to the File Backup List" do
      @sut.add_all_directories("#{configatron.user_path}/mockingdir")
     configatron.file_backup_list.should include "#{configatron.user_path}/mockingdir/testdir3"
+   end
+
+   it "\n -Expands Files into Directory" do
+     @sut.add_all_directories("#{configatron.user_path}/mockingdir")
+     @sut.expand_to("~/backuperator_test")
+     file = File.exist? "/home/discorick/backuperator_test/mockingdir/new file4.txt"
+     file.should == true
    end
 
    after (:all) do

@@ -61,9 +61,9 @@ system("clear")
 
 puts "\n \nPreparing File Lists: \n \n"
 backup.build_file_lists
-backup.make_file_lists_expandable
 Strip.matching_elements_from_hash(configatron.file_backup_list,:each_value,$ignore_files)
 
+configatron.file_backup_list.each_key{|k| puts k}
 puts "Backup to .... ?"
 destination = gets.chomp
 TimeThis.now do
