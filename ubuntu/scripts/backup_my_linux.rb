@@ -1,9 +1,5 @@
 require_relative '../components.rb'
 
-#notes.. 
-#- Would you like to backup up home?
-#- Full or Recursive? (Warning! Recursive will backup ALL file and directories in current user
-
 def enter_to_continue
   puts "Push enter to continue" 
   continue = gets
@@ -28,6 +24,8 @@ end
 GetEnvVariables.kick_off
 backup = Backuperator.new_backup
 puts "File Backup Script"
+puts "Please Enter your user path ie /home/user/"
+configatron.user_path = gets.chomp!
 enter_to_continue
 system("clear")
 
@@ -35,13 +33,13 @@ puts "Backup Files in Home Folder? (y/n) \n"
 confirm = gets.chomp
 if confirm == 'y'
   puts "\n1 Recursive \n2 Non-Recursive \n"
-  puts "Warning!!! Recursive will copy ALL file AND directory contents of #{configatron.user}"
+  puts "Warning!!! Recursive will copy ALL file AND directory contents of #{configatron.user_path}"
   $recursive_option = gets.to_i
   backup.add_all_directories("#{configatron.user_path}") if $recursive_option == 1
   backup.add_directory("#{configatron.user_path}") if $recursive_option == 2
 end
 system("clear")
-
+puts configatron.user_path
 puts "Backup Other Folders? (y/n) \nBe Aware you are already doing a FULL backup of this account" if $recursive_option == 1
 puts "Backup Other Folders? (y/n)" if $recursive_option != 1
 confirm2 = gets.chomp
@@ -57,6 +55,7 @@ exit if configatron.file_backup_list.length == 0
 puts "\n \nPreparing File Lists: \n \n"
 backup.build_file_lists
 Strip.matching_elements_from_hash(configatron.file_backup_list,:each_value,$ignore_files)
+puts configatron.file_backup_list
 
 puts "Backup to .... ?"
 destination = gets.chomp

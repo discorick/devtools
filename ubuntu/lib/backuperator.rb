@@ -28,6 +28,7 @@ class Backuperator
   end
 
   def expand_to(backup_directory)  
+    @logger = Logger.new(File.expand_path('~/file_copy/backup.log'))
     @backup_directory = File.expand_path(backup_directory)
     configatron.file_backup_list.each_key do |directory|
       process_paths directory
@@ -40,11 +41,8 @@ class Backuperator
   def execute_copy file
     begin
       FileUtils.cp "#{@directory}/#{file}","#{@backup_directory}#{@base_dir}/#{file}"
-    rescue Errno::EACCES
-      `sudo cp #{@directory}/#{file} #{@backup_directory}#{@base_dir}/#{file}`
     rescue Errno::ENOENT
-      logger = Logger.new('~/file_copy/backup.log')
-      logger.error "#{$!} << File Not Copied"
+      @logger.error "#{$!} << File Not Copied"
     end
   end
 
