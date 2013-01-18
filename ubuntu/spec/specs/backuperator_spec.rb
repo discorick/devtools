@@ -5,6 +5,9 @@ require_relative "../../components.rb"
 def setup_tests
   %x{mkdir ~/mockingdir}
   FileUtils.touch '/home/discorick/mockingdir/new file4.txt'
+  FileUtils.mkdir '/home/discorick/mockingdir/test dir4'
+  FileUtils.mkdir '/home/discorick/mockingdir/.test dir4'
+  FileUtils.mkdir '/home/discorick/mockingdir/.test dir4/pushed_back'
   %x{touch ~/mockingdir/newfile1.txt ~/mockingdir/newfile2.txt ~/mockingdir/newfile3.txt}
   %x{mkdir ~/mockingdir/testdir1 ~/mockingdir/testdir2 ~/mockingdir/testdir3}
 end
@@ -44,6 +47,8 @@ describe Backuperator do
    it "\n -Adds a File Tree to the File Backup List" do
      @sut.add_all_directories("#{configatron.user_path}/mockingdir")
     configatron.file_backup_list.should include "#{configatron.user_path}/mockingdir/testdir3"
+    configatron.file_backup_list.should include "#{configatron.user_path}/mockingdir/test dir4"
+    configatron.file_backup_list.should include "#{configatron.user_path}/mockingdir/.test dir4/pushed_back"
    end
 
    it "\n -Expands Files into Directory" do

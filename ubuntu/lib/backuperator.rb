@@ -27,21 +27,33 @@ class Backuperator
     directory_list.each{|directory| add_directory(directory)}
   end
 
-  def expand_to(backup_directory) #Rewrite! Waaay to long. 
-    backup_directory = File.expand_path(backup_directory)
+  def expand_to(backup_directory)  
+    @backup_directory = File.expand_path(backup_directory)
     configatron.file_backup_list.each_key do |directory|
-      base_dir = directory.dup
-      base_dir.slice! configatron.user_path
-      new_dir = "#{backup_directory}/#{base_dir}"
-      `mkdir -p #{new_dir}` unless File.exists?(new_dir)
-      configatron.file_backup_list[directory].each do |file|
-        begin
-          FileUtils.cp "#{directory}/#{file}","#{backup_directory}/#{base_dir}/#{file}"
-        rescue Errno::EACCES
-          `sudo cp #{directory}/#{file} #{backup_directory}/#{base_dir}/#{file}`
-        end
-      end
+      process_paths directory
+      configatron.file_backup_list[directory].each{|file| execute_copy file}
     end
+  end
+
+  private
+
+  def execute_copy file
+    begin
+      FileUtils.cp "#{@directory}/#{file}","#{@backup_directory}#{@base_dir}/#{file}"
+    rescue Errno::EACCES
+      `sudo cp #{@directory}/#{file} #{@backup_directory}#{@base_dir}/#{file}`
+    rescue Errno::ENOENT
+      logger = Logger.new('Backup.log')
+      logger.error "#{$!} << File Not Copied"
+    end
+  end
+
+  def process_paths directory
+    @directory = directory
+    @base_dir = directory.dup
+    @base_dir.slice! configatron.user_path
+    new_dir = "#{@backup_directory}/#{@base_dir}"
+    `mkdir -p #{new_dir}` unless File.exists?(new_dir)
   end
 
 end

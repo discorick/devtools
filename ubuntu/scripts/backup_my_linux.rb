@@ -54,11 +54,6 @@ system("clear")
 puts "No Folders Have Been Specified! Exiting..." if configatron.file_backup_list.length == 0 
 exit if configatron.file_backup_list.length == 0 
 
-puts "Folders to Backup: \n \n"
-configatron.file_backup_list.each_key{|dir|puts dir}
-enter_to_continue
-system("clear")
-
 puts "\n \nPreparing File Lists: \n \n"
 backup.build_file_lists
 Strip.matching_elements_from_hash(configatron.file_backup_list,:each_value,$ignore_files)
@@ -67,6 +62,7 @@ puts "Backup to .... ?"
 destination = gets.chomp
 TimeThis.now do
   backup.expand_to destination
+  puts "Some Files could not be copied, Please refer to Backup.log for more info"
   puts "Backup Finished"
 end
 
