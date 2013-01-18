@@ -43,7 +43,7 @@ class Backuperator
     rescue Errno::EACCES
       `sudo cp #{@directory}/#{file} #{@backup_directory}#{@base_dir}/#{file}`
     rescue Errno::ENOENT
-      logger = Logger.new('Backup.log')
+      logger = Logger.new('~/file_copy/backup.log')
       logger.error "#{$!} << File Not Copied"
     end
   end

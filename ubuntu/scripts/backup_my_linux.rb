@@ -62,7 +62,7 @@ puts "Backup to .... ?"
 destination = gets.chomp
 TimeThis.now do
   backup.expand_to destination
-  puts "Some Files could not be copied, Please refer to Backup.log for more info"
+  puts "Some Files could not be copied, refer to ~/file_copy/backup.log"
   puts "Backup Finished"
 end
 
