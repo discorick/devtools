@@ -24,8 +24,6 @@ end
 GetEnvVariables.kick_off
 backup = Backuperator.new_backup
 puts "File Backup Script"
-puts "Please Enter your user path ie /home/user/"
-configatron.user_path = gets.chomp!
 enter_to_continue
 system("clear")
 
@@ -39,7 +37,7 @@ if confirm == 'y'
   backup.add_directory("#{configatron.user_path}") if $recursive_option == 2
 end
 system("clear")
-puts configatron.user_path
+
 puts "Backup Other Folders? (y/n) \nBe Aware you are already doing a FULL backup of this account" if $recursive_option == 1
 puts "Backup Other Folders? (y/n)" if $recursive_option != 1
 confirm2 = gets.chomp
@@ -55,13 +53,13 @@ exit if configatron.file_backup_list.length == 0
 puts "\n \nPreparing File Lists: \n \n"
 backup.build_file_lists
 Strip.matching_elements_from_hash(configatron.file_backup_list,:each_value,$ignore_files)
-puts configatron.file_backup_list
 
 puts "Backup to .... ?"
 destination = gets.chomp
 TimeThis.now do
   backup.expand_to destination
   puts "Some Files could not be copied, refer to ~/file_copy/backup.log"
-  puts "Backup Finished"
 end
+puts ""
+puts "Backup Finished"
 

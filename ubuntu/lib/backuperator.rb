@@ -28,7 +28,7 @@ class Backuperator
   end
 
   def expand_to(backup_directory)  
-    @logger = Logger.new(File.expand_path('~/file_copy/backup.log'))
+    setup_logging
     @backup_directory = File.expand_path(backup_directory)
     configatron.file_backup_list.each_key do |directory|
       process_paths directory
@@ -38,10 +38,19 @@ class Backuperator
 
   private
 
+  def setup_logging
+    logfile = File.expand_path '~/file_copy/backup.log'
+    FileUtils.rm_r File.expand_path '~/file_copy' if File.exist? logfile
+    FileUtils.mkdir File.expand_path '~/file_copy'
+    @logger = Logger.new(logfile)
+  end
+
   def execute_copy file
     begin
-      FileUtils.cp "#{@directory}/#{file}","#{@backup_directory}#{@base_dir}/#{file}"
+      FileUtils.cp "#{@directory}/#{file}","#{@backup_directory}#{@base_dir}/#{file}", :preserve => true
     rescue Errno::ENOENT
+      @logger.error "#{$!} << File Not Copied"
+    rescue Errno::EACCES
       @logger.error "#{$!} << File Not Copied"
     end
   end
